@@ -4,9 +4,35 @@
 	<groupId>com.werlsoft</groupId>
 	<artifactId>Live-FTP</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-  	<packaging>jar</packaging>
+	<packaging>jar</packaging>
 
 	<name>Live-FTP</name>
-  	<url>http://www.werlsoft.com/</url>
+	<url>http://www.werlsoft.com/</url>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>com.werlsoft.liveftp.start.LiveFtp</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 
