@@ -1,3 +1,8 @@
+# Folders #
+Live-FTP/bin/
+Live-FTP/.settings/
+Live-FTP/target/
+
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -7,6 +12,10 @@
 *.jar
 *.war
 *.ear
+
+# other files #
+*.classpath
+*.project
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
