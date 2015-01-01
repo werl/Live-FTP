@@ -11,15 +11,44 @@ import it.sauronsoftware.ftp4j.FTPListParseException;
 
 public class LiveFTP {
 	
-	public static String hostName = "ftp.werl.me";
+	public static String hostName = "";
+	public static String userName = "";
 	private static String password = "";
-	public static String username = "";
 	public static int ftpPort = 21;	
 
-	public static void main(String[] args) throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
+	public static void main(String[] args) {
+		if(args.length != 3) {
+			System.out.println("you must input a hostname, username, password; in that order");
+			return;
+		}
+		
+		hostName = args[0];
+		userName = args[1];
+		password = args[2];
+		
+		try {
+			loop();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (FTPIllegalReplyException e) {
+			e.printStackTrace();
+		} catch (FTPException e) {
+			e.printStackTrace();
+		} catch (FTPDataTransferException e) {
+			e.printStackTrace();
+		} catch (FTPAbortedException e) {
+			e.printStackTrace();
+		} catch (FTPListParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void loop() throws IllegalStateException, IOException, FTPIllegalReplyException, FTPException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
 		FTPClient client = new FTPClient();
 		client.connect(hostName);
-		client.login(username, password);
+		client.login(userName, password);
 		String[] files = client.listNames();
 		for (String s: files){
 			System.out.println(s);
