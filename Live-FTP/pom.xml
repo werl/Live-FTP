@@ -4,12 +4,6 @@
   <artifactId>liveFTP</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Live FTP</name>
-  <repositories>
-      <repository>
-	<id>FTP4J</id>
-	<url>http://repo.typesafe.com/typesafe/releases/</url>
-      </repository>
-    </repositories>
   <build>
     <plugins>
       <plugin>
