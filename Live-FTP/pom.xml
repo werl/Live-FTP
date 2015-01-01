@@ -9,6 +9,13 @@
 	<name>Live-FTP</name>
 	<url>http://www.werlsoft.com/</url>
 
+	<repositories>
+		<repository>
+			<id>ftp4j repo</id>
+			<url>https://raw.github.com/Takuto88/sauronsoftware-maven/master/releases/</url>
+		</repository>
+	</repositories>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -34,5 +41,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>it.sauronsoftware</groupId>
+			<artifactId>ftp4j</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+	</dependencies>
 </project>
 
