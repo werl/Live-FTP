@@ -1,6 +1,6 @@
 package com.werlsoft.liveftp.start;
 
-public class Start_FTP {
+public class LiveFTP {
 
 	public static void main(String[] args) {
 		
