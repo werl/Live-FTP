@@ -89,5 +89,6 @@ public class LiveFTP {
 		for (String s: files){
 			frame.list.add(s);
 		}
+		client.disconnect(true);
 	}
 }
