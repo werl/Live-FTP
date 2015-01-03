@@ -1,11 +1,12 @@
 package com.werlsoft.liveftp.gui.main;
 
-import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.List;
+
+import com.werlsoft.liveftp.gui.panel.BasePanel;
+import com.werlsoft.liveftp.gui.panel.NullPanel;
 
 public class MainWindow extends JFrame {
 
@@ -13,22 +14,36 @@ public class MainWindow extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2331606338031889399L;
-	private JPanel contentPane;
+	public BasePanel contentPane;
 
-	public List list = new List();
+	private static MainWindow frame;
+	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame = new MainWindow(new NullPanel());
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public MainWindow() {
+	public MainWindow(BasePanel panel) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+		setBounds(100, 100, 700, 700);
+		contentPane = panel;
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
-		contentPane.add(list, BorderLayout.CENTER);
+	}
+	
+	public String getCurrentPanelID() {
+		return contentPane.getPanelID();
 	}
 
 }
