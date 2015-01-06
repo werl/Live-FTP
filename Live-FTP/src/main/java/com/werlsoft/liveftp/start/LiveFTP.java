@@ -13,7 +13,7 @@ public class LiveFTP {
 	private static String password = "";
 	public static int ftpPort = 21;
 
-	private static MainWindow frame;
+	public static MainWindow frame;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

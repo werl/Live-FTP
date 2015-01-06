@@ -12,6 +12,7 @@ public class BrowsePanel extends BasePanel {
 	 */
 	private static final long serialVersionUID = 6461805822116404642L;
 	
+	public List browserViewList;
 	/**
 	 * Create the panel.
 	 */
@@ -23,7 +24,7 @@ public class BrowsePanel extends BasePanel {
 		gridBagLayout.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		List browserViewList = new List();
+		browserViewList = new List();
 		GridBagConstraints gbc_browserViewList = new GridBagConstraints();
 		gbc_browserViewList.fill = GridBagConstraints.BOTH;
 		gbc_browserViewList.gridx = 0;

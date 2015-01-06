@@ -12,6 +12,9 @@ public class MainPanel extends BasePanel {
 	 */
 	private static final long serialVersionUID = 7843286670473889916L;
 
+	public JPanel loginPanel;
+	public BrowsePanel browsePanel;
+	
 	/**
 	 * Create the panel.
 	 */
@@ -23,7 +26,7 @@ public class MainPanel extends BasePanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JPanel loginPanel = new LoginPanel();
+		loginPanel = new LoginPanel();
 		GridBagConstraints gbc_loginPanel = new GridBagConstraints();
 		gbc_loginPanel.anchor = GridBagConstraints.NORTH;
 		gbc_loginPanel.insets = new Insets(0, 0, 5, 0);
@@ -32,7 +35,7 @@ public class MainPanel extends BasePanel {
 		gbc_loginPanel.gridy = 0;
 		add(loginPanel, gbc_loginPanel);
 		
-		JPanel browsePanel = new BrowsePanel();
+		browsePanel = new BrowsePanel();
 		GridBagConstraints gbc_browsePanel = new GridBagConstraints();
 		gbc_browsePanel.insets = new Insets(0, 0, 5, 0);
 		gbc_browsePanel.anchor = GridBagConstraints.NORTH;
@@ -40,13 +43,6 @@ public class MainPanel extends BasePanel {
 		gbc_browsePanel.gridx = 0;
 		gbc_browsePanel.gridy = 1;
 		add(browsePanel, gbc_browsePanel);
-		
-		JPanel editorTabPanel = new EditorTabPanel();
-		GridBagConstraints gbc_editorTabPanel = new GridBagConstraints();
-		gbc_editorTabPanel.fill = GridBagConstraints.BOTH;
-		gbc_editorTabPanel.gridx = 0;
-		gbc_editorTabPanel.gridy = 2;
-		add(editorTabPanel, gbc_editorTabPanel);
 
 	}
 

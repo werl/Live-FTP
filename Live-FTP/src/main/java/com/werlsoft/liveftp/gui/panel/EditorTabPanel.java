@@ -1,8 +1,7 @@
 package com.werlsoft.liveftp.gui.panel;
-import javax.swing.JTabbedPane;
 import java.awt.GridBagLayout;
-import javax.swing.JLayeredPane;
 import java.awt.GridBagConstraints;
+import javax.swing.JTextPane;
 
 public class EditorTabPanel extends BasePanel {
 
@@ -22,12 +21,12 @@ public class EditorTabPanel extends BasePanel {
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
-		gbc_tabbedPane.fill = GridBagConstraints.BOTH;
-		gbc_tabbedPane.gridx = 0;
-		gbc_tabbedPane.gridy = 0;
-		add(tabbedPane, gbc_tabbedPane);
+		JTextPane loggerPane = new JTextPane();
+		GridBagConstraints gbc_loggerPane = new GridBagConstraints();
+		gbc_loggerPane.fill = GridBagConstraints.BOTH;
+		gbc_loggerPane.gridx = 0;
+		gbc_loggerPane.gridy = 0;
+		add(loggerPane, gbc_loggerPane);
 
 	}
 
