@@ -8,11 +8,6 @@ import com.werlsoft.liveftp.gui.panel.MainPanel;
 
 public class LiveFTP {
 
-	public static String hostName = "";
-	public static String userName = "";
-	private static String password = "";
-	public static int ftpPort = 21;
-
 	public static MainWindow frame;
 
 	public static void main(String[] args) {

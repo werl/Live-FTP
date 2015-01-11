@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import com.werlsoft.liveftp.start.LiveFTP;
 
@@ -84,6 +85,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		
 		portSpinner = new JSpinner();
 		portSpinner.setValue(new Integer(21));
+		portSpinner.setModel(new SpinnerNumberModel(21, 1, 65535, 1));
 		GridBagConstraints gbc_portSpinner = new GridBagConstraints();
 		gbc_portSpinner.fill = GridBagConstraints.BOTH;
 		gbc_portSpinner.insets = new Insets(0, 0, 0, 5);
