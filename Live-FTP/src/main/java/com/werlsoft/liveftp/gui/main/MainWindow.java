@@ -33,6 +33,7 @@ public class MainWindow extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param panel 
 	 */
 	public MainWindow(BasePanel panel) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,12 +1,5 @@
 package com.werlsoft.liveftp.gui.panel;
 
-import it.sauronsoftware.ftp4j.FTPAbortedException;
-import it.sauronsoftware.ftp4j.FTPClient;
-import it.sauronsoftware.ftp4j.FTPDataTransferException;
-import it.sauronsoftware.ftp4j.FTPException;
-import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
-import it.sauronsoftware.ftp4j.FTPListParseException;
-
 import java.awt.GridBagLayout;
 
 import javax.swing.JTextField;
@@ -15,7 +8,6 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -23,6 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import com.werlsoft.liveftp.ftp.FTPSession;
 import com.werlsoft.liveftp.start.LiveFTP;
 
 public class LoginPanel extends BasePanel implements ActionListener{
@@ -43,14 +36,16 @@ public class LoginPanel extends BasePanel implements ActionListener{
 	private JLabel userNameLable;
 	private JLabel passwordLable;
 	
-	public JButton loginButton;
+	private JButton loginButton;
+	
+	public FTPSession session;
 
 	/**
 	 * Create the panel.
 	 */
 	public LoginPanel() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 104, 57, 0, 100, 0, 124, 0};
+		gridBagLayout.columnWidths = new int[]{0, 100, 57, 0, 100, 0, 100, 0};
 		gridBagLayout.rowHeights = new int[]{44, 34, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
@@ -128,7 +123,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_passwordBox.gridy = 1;
 		add(passwordBox, gbc_passwordBox);
 
-		loginButton = new JButton("LogIn");
+		loginButton = new JButton("Login");
 		loginButton.setEnabled(true);
 		loginButton.addActionListener(this);
 		GridBagConstraints gbc_loginButton = new GridBagConstraints();
@@ -138,59 +133,56 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_loginButton.gridy = 0;
 		add(loginButton, gbc_loginButton);
 		
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().matches("LogIn")){
+		if(e.getActionCommand().matches("Login")){
 			String hostname = this.hostNameBox.getText();
 			int port = (Integer) this.portSpinner.getValue();
 			String username = this.userNameBox.getText();
 			char[] password = this.passwordBox.getPassword();
 			
-			if(hostname.matches("") || port < 0 || username.matches("") || password.length == 0)
+			if(hostname.matches("") || username.matches("") || password.length == 0)
 				System.out.println("test");
 			else {
-				FTPClient client = new FTPClient();
-				try {
-					String def = "";
-					for (char c: password)
-						def += c;
-					client.connect(hostname, port);
-					client.login(username, def);
-					
-					if(LiveFTP.frame.contentPane instanceof MainPanel){
-						MainPanel main = (MainPanel)LiveFTP.frame.contentPane;
-						String[] list = client.listNames();
-						for (String s: list)
+				this.session = new FTPSession (hostname, port, username, password);
+				if (session.connect()) {
+					this.setButtonActian(false);
+					if (LiveFTP.frame.contentPane instanceof MainPanel) {
+						MainPanel main = (MainPanel) LiveFTP.frame.contentPane;
+						main.browsePanel.browserViewList.removeAll();
+						String[] listing = this.session.listCurrentDirFiles();
+						for (String s : listing) {
 							main.browsePanel.browserViewList.add(s);
+						}
 					}
-					
-					client.disconnect(true);
-				} catch (IllegalStateException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (FTPIllegalReplyException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (FTPException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (FTPDataTransferException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (FTPAbortedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (FTPListParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				
 			}
+		}
+		else if (e.getActionCommand().matches("Logout")) {
+			this.setButtonActian(true);
+			this.session.dissconnect();
+			
+			if (LiveFTP.frame.contentPane instanceof MainPanel) {
+				MainPanel main = (MainPanel) LiveFTP.frame.contentPane;
+				main.browsePanel.browserViewList.removeAll();
+			}
+		}
+	}
+	
+	public void enableLogin(boolean login) {
+		loginButton.setEnabled(login);
+	}
+	
+	/**
+	 * Used to toggle whether it is a Login or Logout button
+	 * @param buttonState true for Login, false for Logout
+	 */
+	public void setButtonActian (boolean buttonState) {
+		if (buttonState) {
+			this.loginButton.setText("Login");
+		} else {
+			this.loginButton.setText("Logout");
 		}
 	}
 
