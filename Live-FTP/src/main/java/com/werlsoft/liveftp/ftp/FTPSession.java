@@ -9,6 +9,10 @@ import it.sauronsoftware.ftp4j.FTPListParseException;
 
 import java.io.IOException;
 
+import com.werlsoft.liveftp.gui.panel.BrowsePanel;
+import com.werlsoft.liveftp.gui.panel.MainPanel;
+import com.werlsoft.liveftp.start.LiveFTP;
+
 public class FTPSession implements Runnable {
 
 	private final String hostName;
@@ -18,7 +22,8 @@ public class FTPSession implements Runnable {
 
 	private FTPClient client;
 	
-	private boolean run = true;
+	private boolean run = false;
+	private boolean connectWait = true;
 	
 	private final Thread thread = new Thread(this);
 
@@ -28,39 +33,25 @@ public class FTPSession implements Runnable {
 		this.port = port;
 		this.pass = word;
 		this.thread.start();
-	}
-	
-	
-
-	public boolean connect() {
-		this.client = new FTPClient();
-		try {
-			String def = "";
-			for (char c : pass)
-				def += c;
-			client.connect(hostName, port);
-			client.login(username, def);
-
-		} catch (IllegalStateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return false;
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return false;
-		} catch (FTPIllegalReplyException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return false;
-		} catch (FTPException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return false;
+		
+		if (LiveFTP.frame.contentPane instanceof MainPanel) {
+			MainPanel panel = (MainPanel) LiveFTP.frame.contentPane;
+			panel.tabPanel.addTab(this.hostName, new BrowsePanel(this));
 		}
-		return true;
 	}
-
+	
+	public boolean isConnected () {
+		return this.client.isConnected();
+	}
+	
+	public void connect () {
+		this.connectWait = false;
+	}
+	
+	public void dissconnect () {
+		this.run = false;
+	}
+	
 	public String[] listCurrentDirFiles() {
 		try {
 			return client.listNames();
@@ -89,7 +80,36 @@ public class FTPSession implements Runnable {
 		return null;
 	}
 
-	public boolean dissconnect() {
+	private boolean internalConnect() {
+		this.client = new FTPClient();
+		try {
+			String def = "";
+			for (char c : pass)
+				def += c;
+			client.connect(hostName, port);
+			client.login(username, def);
+			this.connectWait = false;
+		} catch (IllegalStateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		} catch (FTPIllegalReplyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		} catch (FTPException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean internalDissconnect() {
 		if (this.client.isConnected()) {
 			try {
 				this.client.disconnect(true);
@@ -118,8 +138,13 @@ public class FTPSession implements Runnable {
 
 	@Override
 	public void run() {
+		while (this.connectWait) {
+			
+		}
+		this.internalConnect();
 		while (this.run) {
 			
 		}
+		//this.internalDissconnect();
 	}
 }

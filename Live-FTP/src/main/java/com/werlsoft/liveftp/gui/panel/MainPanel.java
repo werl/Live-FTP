@@ -13,7 +13,7 @@ public class MainPanel extends BasePanel {
 	private static final long serialVersionUID = 7843286670473889916L;
 
 	public JPanel loginPanel;
-	public BrowsePanel browsePanel;
+	public TabPanel tabPanel;
 	
 	/**
 	 * Create the panel.
@@ -35,14 +35,14 @@ public class MainPanel extends BasePanel {
 		gbc_loginPanel.gridy = 0;
 		add(loginPanel, gbc_loginPanel);
 		
-		browsePanel = new BrowsePanel();
+		tabPanel = new TabPanel();
 		GridBagConstraints gbc_browsePanel = new GridBagConstraints();
 		gbc_browsePanel.insets = new Insets(0, 0, 5, 0);
 		gbc_browsePanel.anchor = GridBagConstraints.NORTH;
 		gbc_browsePanel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_browsePanel.gridx = 0;
 		gbc_browsePanel.gridy = 1;
-		add(browsePanel, gbc_browsePanel);
+		add(tabPanel, gbc_browsePanel);
 
 	}
 

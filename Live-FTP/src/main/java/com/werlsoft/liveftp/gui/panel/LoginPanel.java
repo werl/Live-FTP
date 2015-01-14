@@ -16,41 +16,51 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import com.werlsoft.liveftp.ftp.FTPSession;
-import com.werlsoft.liveftp.start.LiveFTP;
 
-public class LoginPanel extends BasePanel implements ActionListener{
+public class LoginPanel extends BasePanel implements ActionListener, Runnable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -581089231200934872L;
-	
+
 	public JTextField hostNameBox;
 	public JTextField userNameBox;
 
 	private JPasswordField passwordBox;
-	
+
 	private JSpinner portSpinner;
-	
+
 	private JLabel hostNameLable;
 	private JLabel portLable;
 	private JLabel userNameLable;
 	private JLabel passwordLable;
-	
+
 	private JButton loginButton;
-	
+
 	public FTPSession session;
+
+	private Thread thread;
+
+	private int tabCounter;
 
 	/**
 	 * Create the panel.
 	 */
 	public LoginPanel() {
+		this.thread = new Thread(this, "tab " + tabCounter);
+		this.thread.start();
+	}
+
+	@Override
+	public void run() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 100, 57, 0, 100, 0, 100, 0};
-		gridBagLayout.rowHeights = new int[]{44, 34, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 0, 100, 57, 0, 100, 0, 100, 0 };
+		gridBagLayout.rowHeights = new int[] { 44, 34, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 1.0,
+				0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-		
+
 		hostNameLable = new JLabel("Host Name");
 		GridBagConstraints gbc_hostNameLable = new GridBagConstraints();
 		gbc_hostNameLable.gridwidth = 2;
@@ -59,7 +69,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_hostNameLable.gridx = 0;
 		gbc_hostNameLable.gridy = 0;
 		add(hostNameLable, gbc_hostNameLable);
-		
+
 		hostNameBox = new JTextField();
 		GridBagConstraints gbc_hostNameBox = new GridBagConstraints();
 		gbc_hostNameBox.gridwidth = 2;
@@ -69,7 +79,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_hostNameBox.gridy = 1;
 		add(hostNameBox, gbc_hostNameBox);
 		hostNameBox.setColumns(10);
-		
+
 		portLable = new JLabel("Port");
 		GridBagConstraints gbc_portLable = new GridBagConstraints();
 		gbc_portLable.fill = GridBagConstraints.VERTICAL;
@@ -77,9 +87,8 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_portLable.gridx = 2;
 		gbc_portLable.gridy = 0;
 		add(portLable, gbc_portLable);
-		
+
 		portSpinner = new JSpinner();
-		portSpinner.setValue(new Integer(21));
 		portSpinner.setModel(new SpinnerNumberModel(21, 1, 65535, 1));
 		GridBagConstraints gbc_portSpinner = new GridBagConstraints();
 		gbc_portSpinner.fill = GridBagConstraints.BOTH;
@@ -96,7 +105,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_userNameLable.gridx = 3;
 		gbc_userNameLable.gridy = 0;
 		add(userNameLable, gbc_userNameLable);
-		
+
 		userNameBox = new JTextField();
 		GridBagConstraints gbc_userNameBox = new GridBagConstraints();
 		gbc_userNameBox.gridwidth = 2;
@@ -106,7 +115,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_userNameBox.gridy = 1;
 		add(userNameBox, gbc_userNameBox);
 		userNameBox.setColumns(10);
-		
+
 		passwordLable = new JLabel("Password");
 		GridBagConstraints gbc_passwordLable = new GridBagConstraints();
 		gbc_passwordLable.fill = GridBagConstraints.VERTICAL;
@@ -114,7 +123,7 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_passwordLable.gridx = 5;
 		gbc_passwordLable.gridy = 0;
 		add(passwordLable, gbc_passwordLable);
-		
+
 		passwordBox = new JPasswordField();
 		GridBagConstraints gbc_passwordBox = new GridBagConstraints();
 		gbc_passwordBox.gridwidth = 2;
@@ -132,57 +141,24 @@ public class LoginPanel extends BasePanel implements ActionListener{
 		gbc_loginButton.gridx = 6;
 		gbc_loginButton.gridy = 0;
 		add(loginButton, gbc_loginButton);
-		
+		this.updateUI();
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().matches("Login")){
+		if (e.getActionCommand().matches("Login")) {
 			String hostname = this.hostNameBox.getText();
 			int port = (Integer) this.portSpinner.getValue();
 			String username = this.userNameBox.getText();
 			char[] password = this.passwordBox.getPassword();
-			
-			if(hostname.matches("") || username.matches("") || password.length == 0)
+
+			if (hostname.matches("") || username.matches("")
+					|| password.length == 0)
 				System.out.println("test");
 			else {
-				this.session = new FTPSession (hostname, port, username, password);
-				if (session.connect()) {
-					this.setButtonActian(false);
-					if (LiveFTP.frame.contentPane instanceof MainPanel) {
-						MainPanel main = (MainPanel) LiveFTP.frame.contentPane;
-						main.browsePanel.browserViewList.removeAll();
-						String[] listing = this.session.listCurrentDirFiles();
-						for (String s : listing) {
-							main.browsePanel.browserViewList.add(s);
-						}
-					}
-				}
+				this.session = new FTPSession(hostname, port, username,
+						password);
+				this.session.connect();
 			}
-		}
-		else if (e.getActionCommand().matches("Logout")) {
-			this.setButtonActian(true);
-			this.session.dissconnect();
-			
-			if (LiveFTP.frame.contentPane instanceof MainPanel) {
-				MainPanel main = (MainPanel) LiveFTP.frame.contentPane;
-				main.browsePanel.browserViewList.removeAll();
-			}
-		}
-	}
-	
-	public void enableLogin(boolean login) {
-		loginButton.setEnabled(login);
-	}
-	
-	/**
-	 * Used to toggle whether it is a Login or Logout button
-	 * @param buttonState true for Login, false for Logout
-	 */
-	public void setButtonActian (boolean buttonState) {
-		if (buttonState) {
-			this.loginButton.setText("Login");
-		} else {
-			this.loginButton.setText("Logout");
 		}
 	}
 
